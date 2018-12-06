@@ -373,46 +373,11 @@ int main() {
                 car_left |= ((car_s - safe_gap) < check_car_s) && ((car_s + safe_gap) > check_car_s);
               }
             }
-            //cout << "---------------------" << endl;
 
-            /*
-            for (int i = 0 ; i < 3 ; i++){
-              int num_car = num_car_in_lane[i];
-              double sum_spd = spd_car_in_lane[i];
-
-              double avg_spd = 0; 
-              if(num_car!=0)
-              {
-                avg_spd = sum_spd/num_car;  
-              }
-              cout << "number of car in lane " << i << " is " << num_car << " and avg speed of lane is " << avg_spd <<endl;
-            }
-            */
-            /*
-            cout << "---------------------" << endl;
-            if(car_front == true){
-                cout << "car on the front" << endl;
-            }
-            else {
-                cout << "Front Clear" << endl;
-            }
-            if(car_left == true){
-              cout << "car on the Left" << endl;
-            }
-            else {
-                cout << "Left Clear" << endl;
-            }
-            if(car_right == true){
-                cout << "car on the right" << endl;
-            }
-            else {
-              cout << "Right : Clear" << endl;
-            }
-            */
-            
-            double acc = 0.25;
+	    double acc = 0.25;
             double max_speed = 49.5;
-
+	    
+	    // Lane change logic.
             if(car_front==true)
             {
               // there is a car in the front
@@ -420,13 +385,16 @@ int main() {
               {
                 // if the car in middle lane.
                 if(!car_right){
+		  // car in middle and right lane free. move to right lane.
                   lane++;
                 }
                 else if(!car_left)
                 {
+		  // // car in middle and left lane free. move to right lane.
                   lane--;
                 }
                 else {
+		  // I am stuck in the middle. okay. slow down baby!
                   ref_vel-=acc;
                 }
               }
@@ -435,74 +403,30 @@ int main() {
                 // car in right most lane
                 if(!car_left)
                 {
+		  // go to left lane
                   lane--;
                 }
                 else {
+		  // right lane and there is no space in left lane. so decrease the speed.
                   ref_vel-=acc;
                 }
               }
               else if(lane==0)
               {
                 if(!car_right){
+		  // car on the leftmost lane and there is spance on right lane. go to right lane.
                   lane++;
                 }
               }
             }
             else {
-              // prefer right lane
+               // keep moving on the same lane.
                 if(ref_vel<max_speed)
                 {
                   ref_vel+=acc;
                 }
             }
-            /*
-            if (car_front) {
-              // A car is ahead
-              // Decide to shift lanes or keep in the same lane.
-              if (!car_right && lane < 2) {
-                // No car to the right AND there is a right lane -> shift right
-                lane++;
-              } else if (!car_left && lane > 0) {
-                // No car to the left AND there is a left lane -> shift left
-                lane--;
-              } else {
-                // Nowhere to shift -> // keep the speed of the immidiatde front car.
-                
-                ref_vel-= acc;
-                /*
-                if(front_car_speed<ref_vel)
-                {
-                  cout << "Nowhere to go. Follow the front vehicle" << endl;
-                  cout << "Front car speed :" << front_car_speed << " ref spd : " << ref_vel << endl;
-                  ref_vel -= 0.3;  
-                }
-                else if (front_car_speed>ref_vel)
-                {
-                  ref_vel += acc;  
-                }
-                else
-                {
-                  ref_vel -= acc;  
-                }
-                
-                // keep up the speed with the front car only.
-              }
-            } else {
-              if (lane != 1) {
-                // Not in the center lane. Check if it is safe to move back
-                if ((lane == 2 && !car_left) || (lane == 0 && !car_right)) {
-                  // Move back to the center lane
-                  lane = 1;
-                }
-              }
-              
-              if (ref_vel < max_speed) {
-                // No car ahead AND we are below the speed limit -> speed limit
-                ref_vel += acc;
-              }
-            }
-
-            */
+            
 
             if(prev_size <2)
             {
