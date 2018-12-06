@@ -15,12 +15,6 @@ using namespace std;
 // for convenience
 using json = nlohmann::json;
 
-//########################################################
-// 1. https://github.com/yeutterg/CarND-Path-Planning-Project-P11/blob/master/src/main.cpp
-// 2. https://github.com/sookinoby/path_planning/blob/master/src/main.cpp
-// 3. https://github.com/mvirgo/Path-Planning/blob/master/src/main.cpp
-//########################################################
-
 // For converting back and forth between radians and degrees.
 constexpr double pi() { return M_PI; }
 double deg2rad(double x) { return x * pi() / 180; }
