@@ -84,3 +84,35 @@ the path has processed since last time.
 
 ## Reflection
 
+For generating the trajectory, we have used a spline library for smooth trajectory. As the spline takes atleast 3 input points. I have genegarted three previous points using the trigonometry formula. The ```vector<double> ptsx``` and ```vector<double> ptsy``` has been used to keep track of the previous points of the car's trajectory. The code is as follows in main.cpp:
+```
+ if(prev_size <2)
+ {
+      double prev_car_x = car_x - cos(car_yaw);
+      double prev_car_y = car_y - sin(car_yaw);
+
+      ptsx.push_back(prev_car_x);
+      ptsx.push_back(car_x);
+
+      ptsy.push_back(prev_car_y);
+      ptsy.push_back(car_y);
+}
+```
+Then we take three waypoints to generate the car future trajectory. The calcuation is done in Frenet corordinate and lated converted it to (x,y) co-ordinate:
+```
+vector<double> next_wp0 = getXY(car_s+30, (2+4*lane), map_waypoints_s, map_waypoints_x, map_waypoints_y);
+vector<double> next_wp1 = getXY(car_s+60, (2+4*lane), map_waypoints_s, map_waypoints_x, map_waypoints_y);
+vector<double> next_wp2 = getXY(car_s+90, (2+4*lane), map_waypoints_s, map_waypoints_x, map_waypoints_y);
+```
+Then we perform a spline function to generate smooth trajectory using the following lines of code, where target y is the smooth curve of the trajectory:
+```
+tk::spline s;
+s.set_points(ptsx, ptsy);
+...
+double target_y = s(target_x);  
+```
+  
+
+
+
+
