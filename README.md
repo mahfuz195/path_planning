@@ -110,7 +110,49 @@ tk::spline s;
 s.set_points(ptsx, ptsy);
 ...
 double target_y = s(target_x);  
+
+double target_x = 30.0;
+double target_y = s(target_x);
+double target_dist = sqrt((target_x) * (target_x) + (target_y) * (target_y));
+double x_add_on = 0;
+
+// Fill up the rest of the path planner to always output 50 points
+for (int i = 1; i <= 50 - previous_path_x.size(); i++) {
+  double N = (target_dist/(.02*ref_vel/2.24));
+  double x_point = x_add_on + (target_x) / N;
+  double y_point = s(x_point);
+
+  x_add_on = x_point;
+
+  double x_ref = x_point;
+  double y_ref = y_point;
+
+  // Rotate back to normal after rotating it earlier
+  x_point = (x_ref * cos(ref_yaw) - y_ref*sin(ref_yaw));
+  y_point = (x_ref * sin(ref_yaw) + y_ref*cos(ref_yaw));
+
+  x_point += ref_x;
+  y_point += ref_y;
+
+  next_x_vals.push_back(x_point);
+  next_y_vals.push_back(y_point);
+}
 ```
+
+### Lane change
+
+I have implemented a simple logic for lane changing. The logic is a follows:
+
+1. The car will keep driving in the same lane, if there is no front vehicle.
+
+2. If there is a vehcile in-front of the vehcile, it will check the left and right lane and if they are avaiable, the car will change its lane to the free lane.
+
+### Conclusion
+The car was able to successfully drive the entire track (4.31miles) without any incidents. There are several improvements that can be performed in the project. It could make car a better choice btween light and left lane, based on the traffic condition of each lane such as average speed of each lane and can compute a short term cost benefit calculation. 
+
+
+
+
   
 
 
